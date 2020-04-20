@@ -5,28 +5,30 @@
 % (and, in the case of a customer order that is shipped in more than one shipment, accurately inform us which portion of the order has been shipped), 
 % using our standard functionality for communicating such information when we make that functionality available to you ("Confirmation of Shipment"). 
 
-% If Buyer B places an order O by the help of the seller S Then order O is available for confirmation of the shipment to the seller S.
-available(option(shipment_confirmation), SELLER, ORDER, BUYER) :- placed(BUYER, ORDER, _, SELLER, _).
+% If seller sold order O to Buyer B of some amount on some date 
+% Then shipment confirmation option is available to the seller S for the Order O of Buyer B.
+available(option(shipment_confirmation), SELLER, ORDER, BUYER) :- sold(SELLER, ORDER, BUYER, _, _).
 
-% If order O is available for the confirmation of the shipment to the seller S 
-% Then seller S can view his confirmation of the shipment for that particular order O option in his Amazon Seller Account.
+% If shipment confirmation option is available to the seller S for the Order O of Buyer B.
+% AND Seller S shipped order O to the buyer B on shipment date SHIPMENT_DATE
+% AND Seller S inform amazon of shipment on the date CONFIRMATION_DATE that the order O is shipped to buyer B on the date SHIPMENT_DAYE
+% Then seller S has confirmed shipment order O of the buyer B on the date SHIPMENT_DATE.
 confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPTMENT_DATE) :- 
     available(option(shipment_confirmation), SELLER, ORDER, BUYER),
     shipped(SELLER, ORDER, BUYER, SHIPTMENT_DATE),
-    inform_amazon_of_shipment(SELLER, ORDER, BUYER, SHIPTMENT_DATE, CONFIRMATION_DATE).
+    inform_amazon_of_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPTMENT_DATE).
 
 % If seller S make the confirmation of shipment on the date D for an order O mentioned above for amount A Then 
 % Amazon initiates the credit for the amount A after taking all its charges to seller S on the date named as function PaymentDate(D).
-
-amazon_initiates_credit(CONFIRMATION_DATE, SELLER, ORDER, _) :- 
+amazon_initiates_credit(payment_date(CONFIRMATION_DATE), SELLER, ORDER, _) :- 
     confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, _, _).
 
-
-add_day(TIME_STAMP, DAYS_IN_TIME_STAMP, NEW_TIME_STAMP) :- NEW_TIME_STAMP is TIME_STAMP + (DAYS_IN_TIME_STAMP * 24 * 60 * 62 ).
+add_days(TIME_STAMP, DAYS_IN_TIME_STAMP, NEW_TIME_STAMP) :- 
+    NEW_TIME_STAMP is TIME_STAMP + (DAYS_IN_TIME_STAMP * 24 * 60 * 62 ).
 
 payment_date(INITATION_DATE, PAYMENT_DATE) :- 
     date_time_stamp(INITATION_DATE, TIME_STAMP),
-    add_day(TIME_STAMP, 14, PAYMENT_DATE_TIME_STAMP),
+    add_days(TIME_STAMP, 14, PAYMENT_DATE_TIME_STAMP),
     stamp_date_time(PAYMENT_DATE_TIME_STAMP, PAYMENT_DATE, 0).
 
 % If the confirmation of shipment date D plus 14 days of stipulated period is less than or equal to Registration Date namely REGD of seller S plus 14 days 
