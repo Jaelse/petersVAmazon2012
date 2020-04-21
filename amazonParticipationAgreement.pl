@@ -9,27 +9,25 @@
 % Then shipment confirmation option is available to the seller S for the Order O of Buyer B.
 available(option(shipment_confirmation), SELLER, ORDER, BUYER) :- sold(SELLER, ORDER, BUYER, _, _).
 
-% If shipment confirmation option is available to the seller S for the Order O of Buyer B.
-% AND Seller S shipped order O to the buyer B on shipment date SHIPMENT_DATE
-% AND Seller S inform amazon of shipment on the date CONFIRMATION_DATE that the order O is shipped to buyer B on the date SHIPMENT_DAYE
+% If shipment confirmation option is available to the seller S for the order O of buyer B.
+% AND seller S shipped order O to the buyer B on shipment date SHIPMENT_DATE
+% AND seller S inform amazon of shipment on the date CONFIRMATION_DATE that the order O is shipped to buyer B on the date SHIPMENT_DAYE
 % Then seller S has confirmed shipment order O of the buyer B on the date SHIPMENT_DATE.
 confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPTMENT_DATE) :- 
     available(option(shipment_confirmation), SELLER, ORDER, BUYER),
     shipped(SELLER, ORDER, BUYER, SHIPTMENT_DATE),
     inform_amazon_of_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPTMENT_DATE).
 
-% If seller S make the confirmation of shipment on the date D for an order O mentioned above for amount A Then 
-% Amazon initiates the credit for the amount A after taking all its charges to seller S on the date named as function PaymentDate(D).
-amazon_initiates_credit(payment_date(CONFIRMATION_DATE), SELLER, ORDER, _) :- 
-    confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, _, _).
+% If seller S make the confirmation of shipment on the date CONFIRMATION_DATE for an order ORDER
+% AND CONFIRMATION_DATE will give payment date PD.
+% Then 
+% by the date PD Amazon shall initiate the credit for seller SELLER for shipment confirmation date CONFIRMATION_DATE for the order ORDER.
+amazon_shall_initiate_credit(PD, SELLER, CONFIRMATION_DATE, ORDER, _) :- 
+    confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, _, _),
+    payment_date(CONFIRMATION_DATE, PD).
 
-add_days(TIME_STAMP, DAYS_IN_TIME_STAMP, NEW_TIME_STAMP) :- 
-    NEW_TIME_STAMP is TIME_STAMP + (DAYS_IN_TIME_STAMP * 24 * 60 * 62 ).
-
-payment_date(INITATION_DATE, PAYMENT_DATE) :- 
-    date_time_stamp(INITATION_DATE, TIME_STAMP),
-    add_days(TIME_STAMP, 14, PAYMENT_DATE_TIME_STAMP),
-    stamp_date_time(PAYMENT_DATE_TIME_STAMP, PAYMENT_DATE, 0).
+payment_date(CONFIRMATION_DATE, PAYMENT_DATE) :- 
+    date_add(CONFIRMATION_DATE, 2 weeks, PAYMENT_DATE).
 
 % If the confirmation of shipment date D plus 14 days of stipulated period is less than or equal to Registration Date namely REGD of seller S plus 14 days 
 % Then PaymentDate(D) is obtained by addition of REGD plus 14 days Else PaymentDate(D) is obtained by addition confirmation of shipment date D plus 14 days.
