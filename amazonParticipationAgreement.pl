@@ -24,10 +24,7 @@ confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPTMENT_DATE) :-
 % by the date PD Amazon shall initiate the credit for seller SELLER for shipment confirmation date CONFIRMATION_DATE for the order ORDER.
 amazon_shall_initiate_credit(PD, SELLER, CONFIRMATION_DATE, ORDER, _) :- 
     confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, _, _),
-    payment_date(CONFIRMATION_DATE, PD).
-
-payment_date(CONFIRMATION_DATE, PAYMENT_DATE) :- 
-    date_add(CONFIRMATION_DATE, 2 weeks, PAYMENT_DATE).
+    date_add(CONFIRMATION_DATE, 2 weeks, PD).
 
 % If the confirmation of shipment date D plus 14 days of stipulated period is less than or equal to Registration Date namely REGD of seller S plus 14 days 
 % Then PaymentDate(D) is obtained by addition of REGD plus 14 days Else PaymentDate(D) is obtained by addition confirmation of shipment date D plus 14 days.
