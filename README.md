@@ -75,10 +75,12 @@ Payment date is a term used in the Participation agree which refers to the the d
 seller confirms the shipment of the order. By this (Payment Date) date amazon will initiate the credit to the seller for the
 order which he has shipped to the buyer.<br />
 
+ ```
  If seller S make the confirmation of shipment on the date CONFIRMATION_DATE for an order ORDER
- AND CONFIRMATION_DATE will give payment date PD.
- Then 
- by the date PD Amazon shall initiate the credit for seller SELLER for shipment confirmation date CONFIRMATION_DATE for the order ORDER.
+ AND CONFIRMATION_DATE will give payment date PD
+THEN 
+by the date PD Amazon shall initiate the credit for seller SELLER for shipment confirmation date CONFIRMATION_DATE for the order ORDER.
+```
 
 ```prolog
 amazon_shall_initiate_credit(PD, SELLER, CONFIRMATION_DATE, ORDER, _) :- 
