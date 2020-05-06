@@ -20,7 +20,7 @@ confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPMENT_DATE) :-
     available(functionality(shipment_confirmation), SELLER, ORDER, BUYER),
     shipped(SELLER, ORDER, BUYER, SHIPMENT_DATE),
     inform_amazon_of_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPMENT_DATE),
-    format('Based on Participation Agreement, ~p confirmed the shipment on ~p for the ~p sold to ~p and shipped on ~p.\n', [SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPMENT_DATE]).
+    format('Based on Participation Agreement, ~p confirmed the shipment on ~p for the ~p shipped on ~p to the buyer ~p.\n', [SELLER, CONFIRMATION_DATE, ORDER, SHIPMENT_DATE, BUYER]).
     
 
 % If seller S make the confirmation of shipment on the date CONFIRMATION_DATE for an order ORDER
@@ -30,7 +30,7 @@ confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPMENT_DATE) :-
 amazon_shall_initiate_credit(PD, SELLER, CONFIRMATION_DATE, ORDER, _) :- 
     confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, _, _),
     date_add(CONFIRMATION_DATE, 2 weeks, PD),
-    format('According to the Participation Agreement, by ~p Amazon shall initiate credit to ~p who made shipment confirmation on ~p for the ~p.\n', [PD, SELLER, CONFIRMATION_DATE, ORDER]).
+    format('According to the Participation Agreement, by ~p Amazon shall initiate credit to ~p who made shipment confirmation on ~p for the ~p. \n', [PD, SELLER, CONFIRMATION_DATE, ORDER]).
     
 
 % ---------------------------------------------------------------------
@@ -60,10 +60,12 @@ business_date(BUSINESS_DATE, ORIGINAL_DEPOSIT_DATE) :-
     today_is_business_day(ORIGINAL_DEPOSIT_DATE),
     BUSINESS_DATE = ORIGINAL_DEPOSIT_DATE.
 
-account_shall_get_credited(DEPOSIT_DATE, PAYMENT_DATE, SELLER, ORDER) :-
-    amazon_initiated_credit(PAYMENT_DATE,SELLER, _, ORDER, _),
-    date_add(PAYMENT_DATE, 5 days, DD),
-    business_date(DEPOSIT_DATE, DD).
+account_shall_get_credited(DEPOSIT_DATE, INITIATION_DATE, SELLER, ORDER) :-
+    amazon_initiated_credit(INITIATION_DATE,SELLER, _, ORDER, _),
+    date_add(INITIATION_DATE, 5 days, DD),
+    business_date(DEPOSIT_DATE, DD),
+    format('According to the Participation Agreement, since Amazon initiated the credit on ~p, credit shall get deposited to ~p account by ~p which is 5 business days the date Amazon initiated the credit.\n', [INITIATION_DATE, SELLER,  DEPOSIT_DATE]).
+    
 
 % Where, Business Day is Monday to Friday and Business Day is not federal banking holidays and nextBusinessDay(PD) = BUSINESS DAY after PD. That means the next business day falls on the business days which is after PaymentDate(D) equal to PD.
 
