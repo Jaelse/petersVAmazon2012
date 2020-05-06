@@ -19,7 +19,7 @@ available(functionality(shipment_confirmation), SELLER, ORDER, BUYER) :-
 confirmed_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPMENT_DATE) :- 
     available(functionality(shipment_confirmation), SELLER, ORDER, BUYER),
     shipped(SELLER, ORDER, BUYER, SHIPMENT_DATE),
-    inform_amazon_of_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPMENT_DATE),
+    informed_amazon_of_shipment(SELLER, CONFIRMATION_DATE, ORDER, BUYER, SHIPMENT_DATE),
     format('Based on Participation Agreement, ~p confirmed the shipment on ~p for the ~p shipped on ~p to the buyer ~p.\n', [SELLER, CONFIRMATION_DATE, ORDER, SHIPMENT_DATE, BUYER]).
     
 

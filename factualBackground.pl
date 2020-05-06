@@ -22,7 +22,7 @@ shipped(peters, order(dvds), some_buyer, date(2012,10,15)).
 
 
 % inform_amazon_of_shipment(SELLER, SHIPTMENT_DATE, ORDER, BUYER,  CONFIRMATION_DATE).
-inform_amazon_of_shipment(peters, date(2012,10,15), order(dvds), some_buyer, date(2012,10,15)).
+informed_amazon_of_shipment(peters, date(2012,10,15), order(dvds), some_buyer, date(2012,10,15)).
 
 % Amazon did not initiate instructions to transmit Plaintiff Peters’
 % money to her until November 5, 2012,
